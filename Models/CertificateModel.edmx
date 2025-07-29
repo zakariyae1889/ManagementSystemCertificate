@@ -1,0 +1,413 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="ManagementCertificateModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Certificate">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="status" Type="nvarchar" MaxLength="50" />
+          <Property Name="date_delivery" Type="date" />
+          <Property Name="CreatedAt" Type="datetime" />
+          <Property Name="UpdateAt" Type="datetime" />
+          <Property Name="idRequest" Type="int" />
+        </EntityType>
+        <EntityType Name="certificateCategory">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CertificateCategory" Type="nvarchar" MaxLength="150" />
+          <Property Name="createat" Type="datetime" />
+        </EntityType>
+        <EntityType Name="CertificateRequest">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RequestStatus" Type="nvarchar" MaxLength="150" />
+          <Property Name="RequestDate" Type="date" />
+          <Property Name="idCitizens" Type="int" />
+          <Property Name="idCertificateType" Type="int" />
+          <Property Name="CreatedAt" Type="datetime" />
+          <Property Name="UpdateAt" Type="datetime" />
+        </EntityType>
+        <EntityType Name="certificateType">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NameCertificate" Type="nvarchar" MaxLength="150" />
+          <Property Name="createat" Type="datetime" />
+          <Property Name="CategoryId" Type="int" />
+        </EntityType>
+        <EntityType Name="Citizen">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NationalID" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="FullName" Type="nvarchar" MaxLength="150" />
+          <Property Name="DateBrith" Type="date" />
+          <Property Name="Sex" Type="nvarchar" MaxLength="150" />
+          <Property Name="City" Type="nvarchar" MaxLength="150" />
+          <Property Name="Address" Type="nvarchar" MaxLength="150" />
+          <Property Name="CreatedAt" Type="datetime" />
+          <Property Name="UpdateAt" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Employes">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nationalid" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="FullName" Type="nvarchar" MaxLength="150" />
+          <Property Name="createat" Type="datetime" />
+          <Property Name="updateat" Type="datetime" />
+          <Property Name="Role" Type="nvarchar" MaxLength="50" />
+          <Property Name="Passwords" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <Association Name="fk_category_type">
+          <End Role="certificateCategory" Type="Self.certificateCategory" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="certificateType" Type="Self.certificateType" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="certificateCategory">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="certificateType">
+              <PropertyRef Name="CategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_certificate">
+          <End Role="CertificateRequest" Type="Self.CertificateRequest" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Certificate" Type="Self.Certificate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CertificateRequest">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Certificate">
+              <PropertyRef Name="idRequest" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_certificate_type">
+          <End Role="certificateType" Type="Self.certificateType" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="CertificateRequest" Type="Self.CertificateRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="certificateType">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="CertificateRequest">
+              <PropertyRef Name="idCertificateType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_citizens">
+          <End Role="Citizen" Type="Self.Citizen" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="CertificateRequest" Type="Self.CertificateRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Citizen">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="CertificateRequest">
+              <PropertyRef Name="idCitizens" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ManagementCertificateModelStoreContainer">
+          <EntitySet Name="Certificate" EntityType="Self.Certificate" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="certificateCategory" EntityType="Self.certificateCategory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CertificateRequest" EntityType="Self.CertificateRequest" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="certificateType" EntityType="Self.certificateType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Citizen" EntityType="Self.Citizen" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Employes" EntityType="Self.Employes" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="fk_category_type" Association="Self.fk_category_type">
+            <End Role="certificateCategory" EntitySet="certificateCategory" />
+            <End Role="certificateType" EntitySet="certificateType" />
+          </AssociationSet>
+          <AssociationSet Name="fk_certificate" Association="Self.fk_certificate">
+            <End Role="CertificateRequest" EntitySet="CertificateRequest" />
+            <End Role="Certificate" EntitySet="Certificate" />
+          </AssociationSet>
+          <AssociationSet Name="fk_certificate_type" Association="Self.fk_certificate_type">
+            <End Role="certificateType" EntitySet="certificateType" />
+            <End Role="CertificateRequest" EntitySet="CertificateRequest" />
+          </AssociationSet>
+          <AssociationSet Name="fk_citizens" Association="Self.fk_citizens">
+            <End Role="Citizen" EntitySet="Citizen" />
+            <End Role="CertificateRequest" EntitySet="CertificateRequest" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ManagementCertificateModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Certificate">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="date_delivery" Type="DateTime" Precision="0" />
+          <Property Name="CreatedAt" Type="DateTime" Precision="3" />
+          <Property Name="UpdateAt" Type="DateTime" Precision="3" />
+          <Property Name="idRequest" Type="Int32" />
+          <NavigationProperty Name="CertificateRequest" Relationship="Self.fk_certificate" FromRole="Certificate" ToRole="CertificateRequest" />
+        </EntityType>
+        <EntityType Name="certificateCategory">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CertificateCategory1" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="createat" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="certificateType" Relationship="Self.fk_category_type" FromRole="certificateCategory" ToRole="certificateType" />
+        </EntityType>
+        <EntityType Name="CertificateRequest">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RequestStatus" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="RequestDate" Type="DateTime" Precision="0" />
+          <Property Name="idCitizens" Type="Int32" />
+          <Property Name="idCertificateType" Type="Int32" />
+          <Property Name="CreatedAt" Type="DateTime" Precision="3" />
+          <Property Name="UpdateAt" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Certificate" Relationship="Self.fk_certificate" FromRole="CertificateRequest" ToRole="Certificate" />
+          <NavigationProperty Name="certificateType" Relationship="Self.fk_certificate_type" FromRole="CertificateRequest" ToRole="certificateType" />
+          <NavigationProperty Name="Citizen" Relationship="Self.fk_citizens" FromRole="CertificateRequest" ToRole="Citizen" />
+        </EntityType>
+        <EntityType Name="certificateType">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NameCertificate" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="createat" Type="DateTime" Precision="3" />
+          <Property Name="CategoryId" Type="Int32" />
+          <NavigationProperty Name="certificateCategory" Relationship="Self.fk_category_type" FromRole="certificateType" ToRole="certificateCategory" />
+          <NavigationProperty Name="CertificateRequest" Relationship="Self.fk_certificate_type" FromRole="certificateType" ToRole="CertificateRequest" />
+        </EntityType>
+        <EntityType Name="Citizen">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NationalID" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FullName" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="DateBrith" Type="DateTime" Precision="0" />
+          <Property Name="Sex" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="City" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Address" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedAt" Type="DateTime" Precision="3" />
+          <Property Name="UpdateAt" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="CertificateRequest" Relationship="Self.fk_citizens" FromRole="Citizen" ToRole="CertificateRequest" />
+        </EntityType>
+        <EntityType Name="Employes">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nationalid" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FullName" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="createat" Type="DateTime" Precision="3" />
+          <Property Name="updateat" Type="DateTime" Precision="3" />
+          <Property Name="Role" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Passwords" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <Association Name="fk_certificate">
+          <End Role="CertificateRequest" Type="Self.CertificateRequest" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Certificate" Type="Self.Certificate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CertificateRequest">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Certificate">
+              <PropertyRef Name="idRequest" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_category_type">
+          <End Role="certificateCategory" Type="Self.certificateCategory" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="certificateType" Type="Self.certificateType" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="certificateCategory">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="certificateType">
+              <PropertyRef Name="CategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_certificate_type">
+          <End Role="certificateType" Type="Self.certificateType" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="CertificateRequest" Type="Self.CertificateRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="certificateType">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="CertificateRequest">
+              <PropertyRef Name="idCertificateType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_citizens">
+          <End Role="Citizen" Type="Self.Citizen" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="CertificateRequest" Type="Self.CertificateRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Citizen">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="CertificateRequest">
+              <PropertyRef Name="idCitizens" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ManagementCertificateEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Certificate" EntityType="Self.Certificate" />
+          <EntitySet Name="certificateCategory" EntityType="Self.certificateCategory" />
+          <EntitySet Name="CertificateRequest" EntityType="Self.CertificateRequest" />
+          <EntitySet Name="certificateType" EntityType="Self.certificateType" />
+          <EntitySet Name="Citizen" EntityType="Self.Citizen" />
+          <EntitySet Name="Employes" EntityType="Self.Employes" />
+          <AssociationSet Name="fk_certificate" Association="Self.fk_certificate">
+            <End Role="CertificateRequest" EntitySet="CertificateRequest" />
+            <End Role="Certificate" EntitySet="Certificate" />
+          </AssociationSet>
+          <AssociationSet Name="fk_category_type" Association="Self.fk_category_type">
+            <End Role="certificateCategory" EntitySet="certificateCategory" />
+            <End Role="certificateType" EntitySet="certificateType" />
+          </AssociationSet>
+          <AssociationSet Name="fk_certificate_type" Association="Self.fk_certificate_type">
+            <End Role="certificateType" EntitySet="certificateType" />
+            <End Role="CertificateRequest" EntitySet="CertificateRequest" />
+          </AssociationSet>
+          <AssociationSet Name="fk_citizens" Association="Self.fk_citizens">
+            <End Role="Citizen" EntitySet="Citizen" />
+            <End Role="CertificateRequest" EntitySet="CertificateRequest" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ManagementCertificateModelStoreContainer" CdmEntityContainer="ManagementCertificateEntities">
+          <EntitySetMapping Name="Certificate">
+            <EntityTypeMapping TypeName="ManagementCertificateModel.Certificate">
+              <MappingFragment StoreEntitySet="Certificate">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="date_delivery" ColumnName="date_delivery" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="UpdateAt" ColumnName="UpdateAt" />
+                <ScalarProperty Name="idRequest" ColumnName="idRequest" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="certificateCategory">
+            <EntityTypeMapping TypeName="ManagementCertificateModel.certificateCategory">
+              <MappingFragment StoreEntitySet="certificateCategory">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="CertificateCategory1" ColumnName="CertificateCategory" />
+                <ScalarProperty Name="createat" ColumnName="createat" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CertificateRequest">
+            <EntityTypeMapping TypeName="ManagementCertificateModel.CertificateRequest">
+              <MappingFragment StoreEntitySet="CertificateRequest">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="RequestStatus" ColumnName="RequestStatus" />
+                <ScalarProperty Name="RequestDate" ColumnName="RequestDate" />
+                <ScalarProperty Name="idCitizens" ColumnName="idCitizens" />
+                <ScalarProperty Name="idCertificateType" ColumnName="idCertificateType" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="UpdateAt" ColumnName="UpdateAt" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="certificateType">
+            <EntityTypeMapping TypeName="ManagementCertificateModel.certificateType">
+              <MappingFragment StoreEntitySet="certificateType">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="NameCertificate" ColumnName="NameCertificate" />
+                <ScalarProperty Name="createat" ColumnName="createat" />
+                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Citizen">
+            <EntityTypeMapping TypeName="ManagementCertificateModel.Citizen">
+              <MappingFragment StoreEntitySet="Citizen">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="NationalID" ColumnName="NationalID" />
+                <ScalarProperty Name="FullName" ColumnName="FullName" />
+                <ScalarProperty Name="DateBrith" ColumnName="DateBrith" />
+                <ScalarProperty Name="Sex" ColumnName="Sex" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="UpdateAt" ColumnName="UpdateAt" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Employes">
+            <EntityTypeMapping TypeName="ManagementCertificateModel.Employes">
+              <MappingFragment StoreEntitySet="Employes">
+                <ScalarProperty Name="Passwords" ColumnName="Passwords" />
+                <ScalarProperty Name="Role" ColumnName="Role" />
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="Nationalid" ColumnName="Nationalid" />
+                <ScalarProperty Name="FullName" ColumnName="FullName" />
+                <ScalarProperty Name="createat" ColumnName="createat" />
+                <ScalarProperty Name="updateat" ColumnName="updateat" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Aucun" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
